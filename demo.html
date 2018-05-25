@@ -1,0 +1,238 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7 ]> <html class="ie6"> <![endif]--><!--[if IE 7 ]>    <html class="ie7"> <![endif]--><!--[if IE 8 ]>    <html class="ie8"> <![endif]--><!--[if IE 9 ]>    <html class="ie9"> <![endif]--><!--[if !IE]><!--> <html>         <!--<![endif]--><head><meta name="en:locale" content="zh_CN_evernoteChina" />
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+    <link rel="Shortcut Icon" href="/favicon.ico" type="image/x-icon" />
+
+    <title>js（原生）事件委托：为动态创建节点绑定事件</title>
+
+    <!-- Google Analytics -->
+    <!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+window.ga('create', 'UA-285778-5',
+    'auto', {});
+window.ga('require', 'displayfeatures');
+
+
+/* <![CDATA[ */
+  
+  window.ga('set', 'dimension6', 'FREE');
+  
+  window.ga('set', 'dimension7', '336072fa-ab94-4386-a1e1-99de90896bd8');
+  
+  window.ga('set', '&uid', 'YX19920872');
+  
+  window.ga('set', 'location', 'https://app.yinxiang.com/notelink');
+  
+  window.ga('set', 'dimension5', 'YX19920872');
+  
+/* ]]> */
+</script>
+<!-- End Google Analytics -->
+<script type="text/javascript">
+      window.ga('set', 'dimension1',
+          '');
+      window.ga('set', 'dimension2',
+          'evernote.win32');
+    </script>
+    <script type="text/javascript">
+  window.ga('send', 'pageview', '/notelink');
+</script>
+<!-- End of Google Analytics -->
+  <link rel="stylesheet" href="/ro/LzhiNzJiZGQ5YWZkNzA3ODZkYjM1NTM3MDY4YWY0ZDc0MzM3OTExMTguY3Nz
+/Lzg2ODMxMDE1OWZkZTRjYWRjZTJiNGY0OTBiZTdmNWUyZTE3ODRmYjkuY3Nz
+/LzQ0YzhmZTEyNTM1ODM2NWM2NDk3MjZhMmMyZGM4ODQ5NzY2NGYyNzIuY3Nz
+/L2FkMGVhNjQxMmFhNjJkODQzNDEyZDZlZjI2NmNmYTdiM2JiNWNkMzkuY3Nz
+/LzI0NDRjYmQyOTk0MGVlNDA1YmYxYmIwMmIxZmQxNWI0ODE4NWMxYzcuY3Nz
+/-590311752.css"/><link rel="stylesheet" href="/ro/LzZiZDI0MzEwMzUwMjIyNTk5ODg5YmFhNDUyZDY3YzgxMWE4YTcxNDAuY3Nz
+/L2Y3MzhjN2M5NjllMjVmZmI3NmE4MjhmNzZhOGQ5NjNkMWJjYjk1Y2IuY3Nz
+/L2U1OWRhMDIyMjUyYTAwNjNhMDI2NDhiYzMxYTViMDg3MWQ5MmQ3MDEuY3Nz
+/L2UwODAwZmU4NWM5ZDIxM2QzNTgwYWNjZjAzNjY0OWM0YjkzOTdkMTkuY3Nz
+/1897553776.css"/></head><body class=""><script type="text/javascript">
+    
+      window.utag_data = {
+        'property.global_user_id': 'YX19920872'
+      };
+      
+      window.__EVERNOTE_TEALIUM_GLOBAL_USER_ID__ = 'YX19920872';
+    
+    (function(a,b,c,d){
+     a='//tags.tiqcdn.com/utag/evernote/evernote-web/prod/utag.js';
+     b=document;c='script';d=b.createElement(c);d.src=a;
+     d.type='text/java'+c;d.async=true;
+     a=b.getElementsByTagName(c)[0];a.parentNode.insertBefore(d,a)
+    })();
+  </script>
+<div class="single-note-page-wrapper js-old-design-single-note-view">
+          <div class="header-and-content-wrapper">
+            <div class="logo-bar public-layout">
+                <a href="https://www.yinxiang.com/" target="_blank" class="evernote-logo yinxiang"></a>
+                  <div class="switch-account-div active">
+                  <div class="switch-account-icon switch-account-icon-free"></div>
+                  <div class="switch-account-name">1115001559@qq.com</div>
+                  <div class="switch-account-arrow"></div>
+                  <div class="switch-account-dropdown">
+                    <div class="switch-dropdown-arrow"></div>
+                    <a href="/u/0/Home.action" class="switch-account-menuitem go-to-notes">返回笔记</a><div class="switch-account-menuitem switch">
+                      切换帐户</div>
+                    <div class="switch-account-logout">
+                      登出</div>
+                  </div>
+                </div>
+              </div>
+            <div class="note-view-content-container">
+              <div id="message-container">
+                <div id="message">
+                  <div id="message-checkmark"></div>
+                  <span class="message-text"></span>
+                  <span class="message-action"></span>
+                </div>
+              </div>
+
+              <div class="SharedNoteView"><div id="container-boundingbox" class="wrapper">
+    <div id="container" class="wrapper">
+      <div class="sharing-imagegallery">
+          <div class="SharingMenu"></div>
+          <a class="image-gallery-button" href="#"
+            title="图片集"></a></div>
+      <h2 class="note-title">js（原生）事件委托：为动态创建节点绑定事件</h2>
+      <div class="clearfix"></div>
+      <div class="vtop">
+        <div class="note-updated">
+          <span>
+            已更新2018-5-25</span>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <script type="text/javascript">
+       
+        window._onNoteContentLoaded = function() {
+          
+          window._onNoteContentLoaded = function() {
+            window._isNoteContentLoaded = true;
+          };
+
+          var url = '/shard/s47/nl/19920872/511fa82f-222a-4de4-ae41-c91d70e6d8e2?content=';
+          document.querySelector('#note-content-iframe').src = url;
+        };
+      </script>
+      <div id="loading-placeholder" class="loading"></div>
+      <iframe id="note-content-iframe" src="about:blank"
+        onload="window._onNoteContentLoaded();" class="note-content" frameborder="0"
+        border="0" scrolling="no" style="border: 0; overflow: hidden;">
+      </iframe >
+      </div>
+  </div>
+  <div class="clearfix" style="clear: both;"></div>
+  <div class="footer note-footer">
+    <div>
+      印象笔记，让记忆永存</div>
+    <div class="footer-logo"></div>
+  </div>
+  <script id="welcomeDialog" type="text/html">
+    <div class="EvernoteWelcomeHeader"><div class="page-header">
+    <h1>欢迎使用印象笔记</h1>
+  </div>
+  <div class="text-content">
+    印象笔记帮你轻松收集、整理并找到一切。</div>
+</div><div class="ext-padding">
+      <div class="image-content">
+        <div class="welcome-entry">
+          <div class="welcome-capture welcome-image"></div>
+          捕捉生命感动</div>
+        <div class="welcome-entry">
+          <div class="welcome-access welcome-image"></div>
+          随时随地访问</div>
+        <div class="welcome-entry">
+          <div class="welcome-find welcome-image"></div>
+          快速查找所需</div>
+      </div>
+      <div class="submission-options">
+        <div id="createAccountButton" class="general-button emphasize" >
+          创建帐户</div>
+        <div id="existingAccountButton" class="existing">
+          或者登录现有帐户</div>
+      </div>
+      <div id="skipAccount" class="skip-link">
+        跳过&gt;</div>
+    </div>
+  </script>
+
+  <script id="spamDomainDialog" type="text/html">
+    <div class="ext-padding spam-dialog">
+      <p>你点击的链接将会跳转到一个被举报为诈骗和/或垃圾信息的网页。如果你确定要继续访问，请复制链接并粘贴到你的浏览器地址栏：</p>
+      <p class="anchor-url">{{anchorUrl}}</p>
+      <p class="last">如果不继续访问，请关闭提示并返回笔记。</p>
+    </div>
+  </script>
+</div><div class="EncryptedTextDialog"><script id="encryptedTextDialog" type="text/html">
+    <div class="encrypted-text-dialog">
+      <div class="ext-padding">
+        <div class="dialog-head">
+          显示加密的文本</div>
+        <div class="dialog-body">
+          <label for="passphrase">
+            输入密码查看内容</label>
+          <input type="password" id="passphrase" class="TextInput"/>
+          <div class="error-status" id="encrypted-error">
+            密码不正确</div>
+          <div style="clear: both;"></div>
+          <p>
+            提示：{{hint}}</p>
+          <p>你的口令将不会上传到服务器。</p>
+        </div>
+        <div class="dialog-button-container BtnPanel">
+          <input type="button" class="Btn Btn_emph BtnPanel-btn"
+              id="encrypted-decrypt" value="确定"/>
+          <input type="button" class="Btn Btn_deemph BtnPanel-btn"
+              id="encrypted-close" value="取消"/>
+          <div style="clear: both;"></div>
+        </div>
+      </div>
+    </div>
+    <div id="decrypted-header" class="hidden">
+      加密文本</div>
+  </script>
+</div><div class="SingleNoteAppInstallBox"><script type="text/html" id="openNative">
+    <div class="ext-padding">
+      <div class="open-native">
+        <h1 class="open-native-header">
+          安装印象笔记</h1>
+        <h2 class="open-native-subheader">
+          这条笔记在印象笔记 Windows版阅读的效果最好。安装印象笔记吗？</h2>
+        <div class="img win"></div>
+        <a href="evernote:///view/19920872/s47/511fa82f-222a-4de4-ae41-c91d70e6d8e2/511fa82f-222a-4de4-ae41-c91d70e6d8e2/"
+            class="open-native-button general-button emphasize">
+          用印象笔记 Windows版打开</a>
+        <div class="divider"></div>
+        <a href="https://app.yinxiang.com/getit" class="download-app general-button" target="_blank">下载应用</a><br/>
+        <a href="{{viewOnWebUrl}}" class="webclient-link">
+            或者在网页上打开</a>
+        </div>
+    </div>
+  </script>
+</div></div>
+          </div>
+          <div class="footer wrapper">
+    <a href="https://www.yinxiang.com/tos/" class="footer-entry" target="_blank">服务条款</a><a href="https://www.yinxiang.com/privacy/" class="footer-entry last" target="_blank">隐私政策</a></div>
+</div>
+      <script type="text/javascript" src="/ro/L2RjOWVmYTJkNzQ5ODlhNGIxZWNjNjY2NTk3NDdjOGE3NDIwMmRjY2MuanM
+/L2Y0NzEwYjJlMWEzYjZjNmRlYTZhYzcxZTViNGJlOWVkZTU1MGQ4NzguanM
+/LzZhNWE1ZjQ4ZjNiNDVkY2YzNzc5ODc1Mzk2MDU5YWM5MWI4NmMyOTYuanM
+/LzRmOTExM2E1M2E4Y2VjYzNiYzVkYjQwMGYxZjI2YTFmMGI5Yzk0ZGUuanM
+/LzUxMTkxODlmMWI3OTUwNzBhNjYxZTYzZjIxM2YwZmZlNTQ3MzE4MzcuanM
+/LzZjNTdhOTU4YWUzNjkwOGJjYjM1MGQ0MmM2YmZhMGUyMDliYzIwYTQuanM
+/-1144806360.js"></script><script type="text/javascript">window.__EVERNOTE_ACTIONBEAN__ = {"sharedNotebookGlobalId":null,"businessNotebookNote":false,"noteNotebookJoined":true,"needsLinkedNotebookGuid":false,"showBoxOnVisit":true,"openInAppUrl":"evernote:///view/19920872/s47/511fa82f-222a-4de4-ae41-c91d70e6d8e2/511fa82f-222a-4de4-ae41-c91d70e6d8e2/","cookieName":"enAppInstalled","appInstalled":false,"notebookGuid":"eb2abb58-1a75-4d09-b7da-040c569a0662","skitchPdfNote":false,"platform":"win","joinNotebookUrl":"https://app.yinxiang.com/shard/s47/u/0/business/JoinOrLeaveNotebook.action?joinNotebook=","viewOnWebUrl":"https://app.yinxiang.com/u/0/Home.action#n=511fa82f-222a-4de4-ae41-c91d70e6d8e2&ses=4&sh=2&sds=2&b=eb2abb58-1a75-4d09-b7da-040c569a0662&","skitchJsonLocation":"","skitchAnnotatedPdfLocation":"","pdfUrls":[],"userStatus":"free","noteUpdated":1527236917000,"skitchNote":false,"skitchImageNote":false,"normalSharedNote":true,"currentUsn":108,"userShard":"s47","appNotInstalled":true,"images":true,"showSharingMenu":false,"showUserDropdown":true,"blockAllUpsellThings":false,"presentationModeUsable":false,"mobileUserAgent":false,"webClip":false,"userName":"1115001559@qq.com","userIdentityIds":[5355134],"userShardId":"s47","businessShardId":null,"slotSuffix":"","slotPrefix":"/u/0","currentUserId":19920872,"userPrivilege":"NORMAL","userServiceLevel":"BASIC","websocketUrl":"wss://ws.app.yinxiang.com/shard/s47/id","headerJson":{"downloadLinkExpGroup":"B_download"},"endpoints":{"noteStoreUrl":"https://app.yinxiang.com/shard/s47/u/0/notestore","userStoreUrl":"https://app.yinxiang.com/shard/s47/u/0/edam/user","utilityUrl":"https://app.yinxiang.com/shard/s47/u/0/utility","messageStoreUrl":"https://app.yinxiang.com/shard/s47/u/0/messagestore","noteStoreUrlForBusiness":null,"noteStoreUrlForBusinessAdmin":null,"userStoreUrlForBusiness":null,"utilityUrlForBusiness":null,"businessServiceUrl":null},"thriftEndpointBuilderConfig":{"shardUrlPrefix":"https://app.yinxiang.com/shard/","messageStoreUrlSuffix":"/messagestore","noteStoreUrlSuffix":"/notestore","userStoreUrlSuffix":"/edam/user","businessServiceUrlSuffix":"/edam/business","communicationEngineUrlSuffix":"/communicationengine","utilityStoreUrlSuffix":"/utility"}};</script><script type="text/javascript">require(['es6'], function() {});</script><script type="text/javascript">define("actionBean", [], function() {return window.__EVERNOTE_ACTIONBEAN__;});</script><script type="text/javascript" src="/redesign/global/js/i18n/i18nMessages_zh_CN_evernoteChina.js?version=150"></script><script type="text/javascript" src="/ro/LzE1NGM3MzAzZGU5NmM4NTA1YWM5MGIxYjRlNTNhZTk5NjgyZmY2YzEuanM
+/L2UyZWU4NWNkNzc3NTAwY2I4ZWVmNTljODBmYmUzYjlkMmQ1ZGQ0NTcuanM
+/L2EyNDRjNzlhOTEzZDQwY2ZkMTNjMjVjMTIwYzQzYmI4N2VhYjY5NTkuanM
+/LzVmZTFhYTc0N2RjNDhjMGUyNzk3MjMwYmNiMThhNzdmNzRiZjU0MmUuanM
+/Lzk3YzQyMDQ1YjBlOWY0MzNlODkwZWU1YzM2YjM1OTU5MjIyNWVlNWYuanM
+/781536376.js"></script><!--[if !IE]><!--><script>if (/*@cc_on!@*/false) document.documentElement.className += ' ie10';</script><!--<![endif]--></body></html>
